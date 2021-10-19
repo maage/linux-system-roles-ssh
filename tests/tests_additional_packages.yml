@@ -3,28 +3,63 @@
   hosts: all
   gather_facts: true
   become: true
-  vars:
-    additional_package: >-
-      {% if ansible_facts['distribution'] in [ 'RedHat', 'CentOS' ] and
-            ansible_facts['distribution_version'] | int < 9 %}
-        openssh-ldap
-      {% elif ansible_facts['os_family'] == 'RedHat' %}
-        openssh-keycat
-      {% else %}
-        openssh-tests
-      {% endif %}
   tasks:
+    - name: Get per distro additional_packages
+      ansible.builtin.set_fact:
+        additional_packages: "{{ _additional_packages }}"
+      vars:
+        _distver: "{{ ansible_facts.distribution ~ ansible_facts.distribution_major_version }}"
+        _additional_packages_family_debian:
+          default:
+            - openssh-tests
+          Debian9: []
+          Ubuntu18: []
+        _additional_packages_family_redhat:
+          default:
+            - openssh-askpass
+            - openssh-keycat
+          CentOS7:
+            - openssh-askpass
+            - openssh-keycat
+            - openssh-ldap
+          CentOS8:
+            - openssh-askpass
+            - openssh-keycat
+            - openssh-ldap
+          # RHEL UBI does not have any additional packages available by default
+          RedHat7: []
+          RedHat8: []
+          RedHat9: []
+        _additional_packages_family:
+          default:
+            - openssh-tests
+          Debian: >
+            {{ _additional_packages_family_debian[_distver]
+            |  default(_additional_packages_family_debian['default'])
+            }}
+          RedHat: >
+            {{ _additional_packages_family_redhat[_distver]
+            |  default(_additional_packages_family_redhat['default'])
+            }}
+        _additional_packages: >
+          {{ _additional_packages_family[ansible_facts['os_family']]
+          |  default(_additional_packages_family['default'])
+          }}
+
     - name: Run role
       ansible.builtin.include_role:
         name: linux-system-roles.ssh
       vars:
-        ssh_additional_packages:
-          - "{{ additional_package | trim }}"
+        ssh_additional_packages: "{{ additional_packages }}"
 
     - name: Gather the package facts
       ansible.builtin.package_facts:
+      when:
+        - additional_packages | length > 0
 
     - name: Verify the packages were installed
       ansible.builtin.assert:
         that:
-          - "'{{ additional_package | trim }}' in ansible_facts.packages"
+          - "{{ additional_packages }} is subset(ansible_facts.packages.keys())"
+      when:
+        - additional_packages | length > 0
