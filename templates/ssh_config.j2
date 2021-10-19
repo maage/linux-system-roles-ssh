@@ -78,6 +78,7 @@ Match {{ match["Condition"] }}
 {{       render_option("GSSAPITrustDns",match["GSSAPITrustDns"],true) -}}
 {{       render_option("GSSAPIKexAlgorithms",match["GSSAPIKexAlgorithms"],true) -}}
 {{       render_option("HashKnownHosts",match["HashKnownHosts"],true) -}}
+{{       render_option("HostbasedAcceptedAlgorithms",match["HostbasedAcceptedAlgorithms"],true) -}}
 {{       render_option("HostbasedAuthentication",match["HostbasedAuthentication"],true) -}}
 {{       render_option("HostbasedKeyTypes",match["HostbasedKeyTypes"],true) -}}
 {{       render_option("HostbasedAcceptedAlgorithms",match["HostbasedAcceptedAlgorithms"],true) -}}
@@ -112,6 +113,7 @@ Match {{ match["Condition"] }}
 {{       render_option("ProxyCommand",match["ProxyCommand"],true) -}}
 {{       render_option("ProxyJump",match["ProxyJump"],true) -}}
 {{       render_option("ProxyUseFdpass",match["ProxyUseFdpass"],true) -}}
+{{       render_option("PubkeyAcceptedAlgorithms",match["PubkeyAcceptedAlgorithms"],true) -}}
 {{       render_option("PubkeyAcceptedKeyTypes",match["PubkeyAcceptedKeyTypes"],true) -}}
 {{       render_option("PubkeyAcceptedAlgorithms",match["PubkeyAcceptedAlgorithms"],true) -}}
 {{       render_option("PubkeyAuthentication",match["PubkeyAuthentication"],true) -}}
@@ -200,6 +202,7 @@ Host {{ host["Condition"] }}
 {{       render_option("GSSAPITrustDns",host["GSSAPITrustDns"],true) -}}
 {{       render_option("GSSAPIKexAlgorithms",host["GSSAPIKexAlgorithms"],true) -}}
 {{       render_option("HashKnownHosts",host["HashKnownHosts"],true) -}}
+{{       render_option("HostbasedAcceptedAlgorithms",host["HostbasedAcceptedAlgorithms"],true) -}}
 {{       render_option("HostbasedAuthentication",host["HostbasedAuthentication"],true) -}}
 {{       render_option("HostbasedKeyTypes",host["HostbasedKeyTypes"],true) -}}
 {{       render_option("HostbasedAcceptedAlgorithms",host["HostbasedAcceptedAlgorithms"],true) -}}
@@ -234,6 +237,7 @@ Host {{ host["Condition"] }}
 {{       render_option("ProxyCommand",host["ProxyCommand"],true) -}}
 {{       render_option("ProxyJump",host["ProxyJump"],true) -}}
 {{       render_option("ProxyUseFdpass",host["ProxyUseFdpass"],true) -}}
+{{       render_option("PubkeyAcceptedAlgorithms",host["PubkeyAcceptedAlgorithms"],true) -}}
 {{       render_option("PubkeyAcceptedKeyTypes",host["PubkeyAcceptedKeyTypes"],true) -}}
 {{       render_option("PubkeyAcceptedAlgorithms",host["PubkeyAcceptedAlgorithms"],true) -}}
 {{       render_option("PubkeyAuthentication",host["PubkeyAuthentication"],true) -}}
@@ -315,6 +319,7 @@ Host {{ host["Condition"] }}
 {{ body_option("GSSAPITrustDns",ssh_GSSAPITrustDns) -}}
 {{ body_option("GSSAPIKexAlgorithms",ssh_GSSAPIKexAlgorithms) -}}
 {{ body_option("HashKnownHosts",ssh_HashKnownHosts) -}}
+{{ body_option("HostbasedAcceptedAlgorithms",ssh_HostbasedAcceptedAlgorithms) -}}
 {{ body_option("HostbasedAuthentication",ssh_HostbasedAuthentication) -}}
 {{ body_option("HostbasedKeyTypes",ssh_HostbasedKeyTypes) -}}
 {{ body_option("HostbasedAcceptedAlgorithms",ssh_HostbasedAcceptedAlgorithms) -}}
@@ -349,6 +354,7 @@ Host {{ host["Condition"] }}
 {{ body_option("ProxyCommand",ssh_ProxyCommand) -}}
 {{ body_option("ProxyJump",ssh_ProxyJump) -}}
 {{ body_option("ProxyUseFdpass",ssh_ProxyUseFdpass) -}}
+{{ body_option("PubkeyAcceptedAlgorithms",ssh_PubkeyAcceptedAlgorithms) -}}
 {{ body_option("PubkeyAcceptedKeyTypes",ssh_PubkeyAcceptedKeyTypes) -}}
 {{ body_option("PubkeyAcceptedAlgorithms",ssh_PubkeyAcceptedAlgorithms) -}}
 {{ body_option("PubkeyAuthentication",ssh_PubkeyAuthentication) -}}
