@@ -1,5 +1,6 @@
 ---
-- hosts: all
+- name: Default Backup configuration files
+  hosts: all
   vars:
     __ssh_test_backup_files:
       - /etc/ssh_config.d/00-ansible.conf
@@ -15,7 +16,8 @@
   roles:
     - linux-system-roles.ssh
 
-- hosts: all
+- name: Default Restore configuration files
+  hosts: all
   vars:
     __ssh_test_backup_files:
       - /etc/ssh_config.d/00-ansible.conf
