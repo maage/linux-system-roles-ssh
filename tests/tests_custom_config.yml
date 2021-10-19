@@ -1,6 +1,7 @@
 ---
 - name: Test we can write any other configuration file
   hosts: all
+  become: true
   tasks:
     - name: Run role
       ansible.builtin.include_role:

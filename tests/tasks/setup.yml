@@ -5,6 +5,7 @@
   when: "'os_family' not in ansible_facts"
 
 - name: Make sure openssh is installed before creating backup
+  become: true
   vars:
     __ssh_test_packages:
       RedHat:
