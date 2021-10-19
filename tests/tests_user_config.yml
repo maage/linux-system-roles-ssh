@@ -52,7 +52,6 @@
         - name: Stat the .ssh dir
           become: true
           become_user: "{{ username }}"
-          become_method: su
           ansible.builtin.stat:
             path: "/home/{{ username }}/.ssh"
           register:
@@ -69,7 +68,6 @@
         - name: Make sure the file is readable by user
           become: true
           become_user: "{{ username }}"
-          become_method: su
           ansible.builtin.stat:
             path: "/home/{{ username }}/.ssh/config"
 
@@ -101,7 +99,6 @@
         - name: Test the effective configuration using ssh
           become: true
           become_user: "{{ username }}"
-          become_method: su
           ansible.builtin.command: ssh -vvv -G example
           register: effective
           when:
