@@ -50,8 +50,8 @@
           register: config
 
         - name: Stat the .ssh dir
-          become: true
-          become_user: "{{ username }}"
+          become: false
+          remote_user: "{{ username }}"
           ansible.builtin.stat:
             path: "/home/{{ username }}/.ssh"
           register:
@@ -66,8 +66,8 @@
               - ssh_dir_mode.stat.mode == '0700'
 
         - name: Make sure the file is readable by user
-          become: true
-          become_user: "{{ username }}"
+          become: false
+          remote_user: "{{ username }}"
           ansible.builtin.stat:
             path: "/home/{{ username }}/.ssh/config"
 
@@ -97,8 +97,8 @@
               - config_mode.stat.mode == '0600'
 
         - name: Test the effective configuration using ssh
-          become: true
-          become_user: "{{ username }}"
+          become: false
+          remote_user: "{{ username }}"
           ansible.builtin.command: ssh -vvv -G example
           register: effective
           when:
