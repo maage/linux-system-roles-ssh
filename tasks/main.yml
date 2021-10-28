@@ -45,24 +45,20 @@
         {{ ssh_skip_defaults }}
       {% elif ssh_user is not none %}
         true
+      {% elif ssh_drop_in_name is not none and __ssh_supports_drop_in %}
+        true
       {% else %}
-        {% if ssh_drop_in_name is not none and __ssh_supports_drop_in %}
-          true
-        {% else %}
-          false
-        {% endif %}
+        false
       {% endif %}
     __ssh_config_file: >-
       {% if ssh_config_file is not none %}
         {{ ssh_config_file }}
       {% elif ssh_user is not none and getent_passwd is defined %}
         {{ getent_passwd[ssh_user][4] }}/.ssh/config
+      {% elif ssh_drop_in_name is not none and __ssh_supports_drop_in %}
+        {{ __ssh_drop_in_template | replace("{name}", ssh_drop_in_name) }}
       {% else %}
-        {% if ssh_drop_in_name is not none and __ssh_supports_drop_in %}
-          {{ __ssh_drop_in_template | replace("{name}", ssh_drop_in_name) }}
-        {% else %}
-          /etc/ssh/ssh_config
-        {% endif %}
+        /etc/ssh/ssh_config
       {% endif %}
     __ssh_config_owner: >-
       {% if ssh_config_owner is not none %}
