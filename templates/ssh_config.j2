@@ -404,3 +404,37 @@ Host {{ host["Condition"] }}
 {% if ssh_Host is defined %}
 {{   host_block(ssh_Host) -}}
 {% endif %}
+{% macro rule_block(rule_list) %}
+{%   for rule in ssh_Rule %}
+{%     if rule['Match'] is defined and rule['Host'] is defined %}
+{{       false | mandatory('ssh_Rules should be either Match or Host') }}
+{%     elif rule['Match'] is defined %}
+{%       set _cond = rule.pop('Match') %}
+{%       if not loop.first %}
+
+{%       endif %}
+{%       if rule['Comment'] is defined %}
+{%         set _comment = rule.pop('Comment') %}
+# {{ _comment }}
+{%       endif %}
+{{       match_block(rule | combine({"Condition": _cond})) -}}
+{%     elif rule['Host'] is defined %}
+{%       set _cond = rule.pop('Host') %}
+{%       if not loop.first %}
+
+{%       endif %}
+{%       if rule['Comment'] is defined %}
+{%         set _comment = rule.pop('Comment') %}
+# {{ _comment }}
+{%       endif %}
+{{       host_block(rule | combine({"Condition": _cond})) -}}
+{%     else %}
+{{       false | mandatory('ssh_Rules should be either Match or Host') }}
+{%     endif %}
+{%   endfor %}
+{% endmacro %}
+{% if ssh_Rule is defined %}
+{{   rule_block(ssh_Rule) -}}
+{% elif __ssh_defaults['ssh_Rule'] is defined and __ssh_skip_defaults|trim|bool != true %}
+{{   rule_block( __ssh_defaults['ssh_Rule']) -}}
+{% endif %}
