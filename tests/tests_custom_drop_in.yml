@@ -24,7 +24,7 @@
       vars:
         ssh:
           Compression: true
-          GSSAPIAuthentication: false
+          ForwardAgent: false
         __ssh_drop_in_template: /tmp/ssh_config.d_{name}.conf
 
     - name: Verify the configuration file was created in the right place
@@ -38,7 +38,7 @@
           ansible.builtin.assert:
             that:
               - "'Compression yes' in config.content | b64decode"
-              - "'GSSAPIAuthentication no' in config.content | b64decode"
+              - "'ForwardAgent no' in config.content | b64decode"
               # common defaults should be skipped (ssh_skip_defaults=auto)
               - "'Include' not in config.content | b64decode"
               - "'SendEnv' not in config.content | b64decode"

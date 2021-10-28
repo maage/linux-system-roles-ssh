@@ -27,7 +27,7 @@
       vars:
         ssh_user: "{{ username }}"
         ssh:
-          GSSAPIAuthentication: false
+          ForwardAgent: false
           Host:
             Condition: example
             Hostname: example.com
@@ -80,7 +80,7 @@
         - name: Verify the options are in the file
           ansible.builtin.assert:
             that:
-              - "'\nGSSAPIAuthentication no' in config.content | b64decode"
+              - "'\nForwardAgent no' in config.content | b64decode"
               - "'Host example' in config.content | b64decode"
               - "'Hostname example.com' in config.content | b64decode"
               - "'User somebody' in config.content | b64decode"
@@ -122,7 +122,7 @@
         - name: Verify the options are NOT in the global configuration file
           ansible.builtin.assert:
             that:
-              - "'\nGSSAPIAuthentication no' not in content"
+              - "'\nForwardAgent no' not in content"
               - "'Host example' not in content"
               - "'Hostname example.com' not in content"
               - "'User somebody' not in content"

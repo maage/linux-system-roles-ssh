@@ -18,12 +18,12 @@
       vars:
         ssh:
           Compression: true
-          GSSAPIAuthentication: false
+          ForwardAgent: false
           ControlMaster: auto
           ControlPath: ~/.ssh/.cm%C
           Match:
             - Condition: "all"
-              GSSAPIAuthentication: true
+              ForwardAgent: true
           Host:
             Condition: example
             Hostname: example.com
@@ -57,11 +57,11 @@
           ansible.builtin.assert:
             that:
               - "'Compression yes' in config.content | b64decode"
-              - "'GSSAPIAuthentication no' in config.content | b64decode"
+              - "'ForwardAgent no' in config.content | b64decode"
               - "'ControlMaster auto' in config.content | b64decode"
               - "'ControlPath ~/.ssh/.cm%C' in config.content | b64decode"
               - "'Match all' in config.content | b64decode"
-              - "'GSSAPIAuthentication yes' in config.content | b64decode"
+              - "'ForwardAgent yes' in config.content | b64decode"
               - "'Host example' in config.content | b64decode"
               - "'Hostname example.com' in config.content | b64decode"
               - "'User somebody' in config.content | b64decode"

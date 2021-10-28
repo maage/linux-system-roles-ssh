@@ -15,7 +15,7 @@
             ansible_facts['distribution_version']|int >= 8) %}
         Include /etc/ssh/ssh_config.d/*.conf
       {% else %}
-        GSSAPIAuthentication yes
+        ForwardAgent yes
       {% endif %}
   tasks:
     - name: Backup configuration files
