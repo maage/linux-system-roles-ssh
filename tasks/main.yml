@@ -16,14 +16,14 @@
 
 - name: Make sure the ~/.ssh/ directory exists and has expected permissions
   ansible.builtin.file:
-    path: "{{ getent_passwd[ssh_user][4] }}/.ssh/"
+    path: "{{ ansible_facts.getent_passwd[ssh_user][4] }}/.ssh/"
     state: directory
     mode: 0700
     owner: "{{ ssh_user }}"
     group: "{{ ssh_user }}"
   when:
     - ssh_user is not none
-    - getent_passwd is defined
+    - ansible_facts.getent_passwd is defined
 
 - name: Generate the configuration file
   ansible.builtin.template:
@@ -53,8 +53,8 @@
     __ssh_config_file: >-
       {% if ssh_config_file is not none %}
         {{ ssh_config_file }}
-      {% elif ssh_user is not none and getent_passwd is defined %}
-        {{ getent_passwd[ssh_user][4] }}/.ssh/config
+      {% elif ssh_user is not none and ansible_facts.getent_passwd is defined %}
+        {{ ansible_facts.getent_passwd[ssh_user][4] }}/.ssh/config
       {% elif ssh_drop_in_name is not none and __ssh_supports_drop_in %}
         {{ __ssh_drop_in_template | replace("{name}", ssh_drop_in_name) }}
       {% else %}
@@ -71,7 +71,7 @@
     __ssh_config_group: >-
       {% if ssh_config_group is not none %}
         {{ ssh_config_group }}
-      {% elif ssh_user is not none and getent_passwd is defined %}
+      {% elif ssh_user is not none and ansible_facts.getent_passwd is defined %}
         {{ ssh_user }}
       {% else %}
         root
