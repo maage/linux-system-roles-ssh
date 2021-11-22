@@ -15,7 +15,7 @@
     - name: Run role
       ansible.builtin.include_role:
         name: linux-system-roles.ssh
-      vars:
+      vars:  # noqa var-naming ssh role variables match 1:1 with options with ssh_ -prefix
         ssh:
           Compression: true
           ForwardAgent: false

@@ -15,7 +15,7 @@
     - name: Run role
       ansible.builtin.include_role:
         name: linux-system-roles.ssh
-      vars:
+      vars:  # noqa var-naming ssh role uses 1:1 mapping with option name with ssh_ prefix
         ssh:
           StrictHostKeyChecking: false
           Port: 1111
