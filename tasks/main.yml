@@ -8,22 +8,22 @@
     state: present
 
 - name: Gather information about the user for user configuration
+  when:
+    - ssh_user is not none
   ansible.builtin.getent:
     database: passwd
     key: "{{ ssh_user }}"
-  when:
-    - ssh_user is not none
 
 - name: Make sure the ~/.ssh/ directory exists and has expected permissions
+  when:
+    - ssh_user is not none
+    - ansible_facts.getent_passwd is defined
   ansible.builtin.file:
     path: "{{ ansible_facts.getent_passwd[ssh_user][4] }}/.ssh/"
     state: directory
     mode: 0700
     owner: "{{ ssh_user }}"
     group: "{{ ssh_user }}"
-  when:
-    - ssh_user is not none
-    - ansible_facts.getent_passwd is defined
 
 - name: Generate the configuration file
   ansible.builtin.template:

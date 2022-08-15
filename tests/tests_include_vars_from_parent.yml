@@ -5,6 +5,8 @@
   become: true
   tasks:
     - name: create var file in caller that can override the one in called role
+      when:
+        - inventory_hostname == ansible_play_hosts_all[0]
       delegate_to: localhost
       ansible.builtin.copy:
         # usually the fake file will cause the called role to crash of
@@ -19,7 +21,6 @@
       # In case the playbook is executed against multiple hosts, use
       # only the first one. Otherwise the hosts would stomp on each
       # other since they are changing files on the controller.
-      when: inventory_hostname == ansible_play_hosts_all[0]
       vars:
         # change to hostvars['localhost']['ansible_facts'] to use the
         # information for localhost
