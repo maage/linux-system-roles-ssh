@@ -6,7 +6,7 @@
     ssh_c: {}
   tasks:
     - name: Ubuntu and RHEL6 containers are minified, missing manual pages
-      meta: end_host
+      ansible.builtin.meta: end_host
       when:
         - ansible_facts['distribution'] == 'Ubuntu' or
           (ansible_facts['distribution'] in ['CentOS', 'RedHat'] and
@@ -23,7 +23,7 @@
         ansible_facts['os_family'] != 'RedHat'
 
     - name: Make sure manual pages and bash are installed
-      package:
+      ansible.builtin.package:
         name:
           - man
           - bash
@@ -31,7 +31,7 @@
         state: present
 
     - name: Get list of options from manual page
-      shell: >-
+      ansible.builtin.shell: >-
         set -o pipefail && man ssh_config \
           | grep -o '^     [A-Z][A-Za-z0-9]*\(.\|  \)' \
           | grep -v "[A-Za-z0-9] $" | grep -v "[^A-Za-z0-9 ]$" \
@@ -43,17 +43,18 @@
       register: ssh_options
       changed_when: false
 
-    - debug:
+    - name: Output ssh_options.stdout_lines
+      ansible.builtin.debug:
         var: ssh_options.stdout_lines
 
     - name: Construct the configuration list
-      set_fact:
+      ansible.builtin.set_fact:
         ssh_c: "{{ ssh_c | combine({item: 'yes'}) }}"
       loop:
         "{{ ssh_options.stdout_lines }}"
 
     - name: Run role
-      include_role:
+      ansible.builtin.include_role:
         name: linux-system-roles.ssh
       vars:
         __ssh_supports_validate: false
@@ -62,12 +63,12 @@
           "{{ ssh_c }}"
 
     - name: Download the configuration file
-      slurp:
+      ansible.builtin.slurp:
         src: /tmp/ssh_config
       register: config
 
     - name: Verify the options are in the file
-      assert:
+      ansible.builtin.assert:
         that:
           - "'{{ item }} yes' in config.content | b64decode "
       loop:

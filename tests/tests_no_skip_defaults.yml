@@ -18,10 +18,10 @@
       {% endif %}
   tasks:
     - name: Backup configuration files
-      include_tasks: tasks/backup.yml
+      ansible.builtin.include_tasks: tasks/backup.yml
 
     - name: Run role
-      include_role:
+      ansible.builtin.include_role:
         name: linux-system-roles.ssh
       vars:
         ssh_skip_defaults: false
@@ -30,12 +30,12 @@
           LocalForward: 2222 localhost:22
 
     - name: Download the new configuration file
-      slurp:
+      ansible.builtin.slurp:
         src: /tmp/ssh_config_with_defaults
       register: config
 
     - name: Check if the selected options are in
-      assert:
+      ansible.builtin.assert:
         that:
           - "'{{ __ssh_test_option|trim }}' in config.content | b64decode"
           - "'LocalForward 2222 localhost:22' in config.content | b64decode"

@@ -1,21 +1,21 @@
 ---
 - name: Set platform/version specific variables
-  include_tasks: set_vars.yml
+  ansible.builtin.include_tasks: set_vars.yml
 
 - name: Ensure required packages are installed
-  package:
+  ansible.builtin.package:
     name: "{{ __ssh_packages + ssh_additional_packages }}"
     state: present
 
 - name: Gather information about the user for user configuration
-  getent:
+  ansible.builtin.getent:
     database: passwd
     key: "{{ ssh_user }}"
   when:
     - ssh_user is not none
 
 - name: Make sure the ~/.ssh/ directory exists and has expected permissions
-  file:
+  ansible.builtin.file:
     path: "{{ getent_passwd[ssh_user][4] }}/.ssh/"
     state: directory
     mode: 0700
@@ -26,7 +26,7 @@
     - getent_passwd is defined
 
 - name: Generate the configuration file
-  template:
+  ansible.builtin.template:
     src: "ssh_config.j2"
     dest: "{{ __ssh_config_file | trim }}"
     owner: "{{ __ssh_config_owner | trim }}"

@@ -14,31 +14,31 @@
           ansible_facts['distribution_version'] | int < 7
 
     - name: Backup configuration files
-      include_tasks: tasks/backup.yml
+      ansible.builtin.include_tasks: tasks/backup.yml
 
     - name: Record default values from configuration file
-      command: ssh -G localhost -F /etc/ssh/ssh_config
+      ansible.builtin.command: ssh -G localhost -F /etc/ssh/ssh_config
       register: options_before
       changed_when: false
 
     - name: Truncate configuration file
-      file:
+      ansible.builtin.file:
         state: absent
         path: /etc/ssh/ssh_config
 
     - name: Run role
-      include_role:
+      ansible.builtin.include_role:
         name: linux-system-roles.ssh
       vars:
         ssh_config_file: /etc/ssh/ssh_config
         ssh_skip_defaults: false
 
     - name: Record values in new configuration file
-      command: ssh -G localhost -F /etc/ssh/ssh_config
+      ansible.builtin.command: ssh -G localhost -F /etc/ssh/ssh_config
       register: options_after
       changed_when: false
 
     - name: Verify configuration is same
-      assert:
+      ansible.builtin.assert:
         that:
           - options_before.stdout == options_after.stdout

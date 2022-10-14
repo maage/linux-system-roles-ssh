@@ -3,7 +3,7 @@
   tasks:
     - name: create var file in caller that can override the one in called role
       delegate_to: localhost
-      copy:
+      ansible.builtin.copy:
         # usually the fake file will cause the called role to crash of
         # overriding happens, but if not, set a variable that will
         # allow to detect the bug
@@ -36,7 +36,8 @@
           map('join') | product(versions) | map('join') | list +
           [facts['distribution'], facts['os_family']] }}"
 
-    - import_role:
+    - name: Import role caller
+      ansible.builtin.import_role:
         name: caller
       vars:
         roletoinclude: linux-system-roles.ssh

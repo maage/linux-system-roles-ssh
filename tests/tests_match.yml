@@ -9,10 +9,10 @@
 
   tasks:
     - name: Backup configuration files
-      include_tasks: tasks/backup.yml
+      ansible.builtin.include_tasks: tasks/backup.yml
 
     - name: Run role
-      include_role:
+      ansible.builtin.include_role:
         name: linux-system-roles.ssh
       vars:
         ssh:
@@ -40,12 +40,12 @@
 
       block:
         - name: Download the custom configuration file
-          slurp:
+          ansible.builtin.slurp:
             src: "{{ ssh_config_file }}"
           register: config
 
         - name: Verify the options are in the file
-          assert:
+          ansible.builtin.assert:
             that:
               - "'Match user testuser' in config.content | b64decode"
               - "'Compression yes' in config.content | b64decode"
@@ -59,19 +59,19 @@
     - name: Verify also runtime configuration
       block:
         - name: Run first ssh in test mode to evaluate the configuration
-          command: ssh -G testuser@example
+          ansible.builtin.command: ssh -G testuser@example
           register: test1
 
         - name: Run second ssh in test mode to evaluate the configuration
-          command: ssh -G local
+          ansible.builtin.command: ssh -G local
           register: test2
 
         - name: Run third ssh in test mode to evaluate the configuration
-          command: ssh -G remote
+          ansible.builtin.command: ssh -G remote
           register: test3
 
         - name: Verify the options are correctly evaluated
-          assert:
+          ansible.builtin.assert:
             that:
               - "'compression yes' in test1.stdout"
               - "'compression yes' not in test2.stdout"
@@ -92,4 +92,4 @@
 
 
     - name: Restore configuration files
-      include_tasks: tasks/restore.yml
+      ansible.builtin.include_tasks: tasks/restore.yml

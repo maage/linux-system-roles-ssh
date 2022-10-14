@@ -97,7 +97,7 @@ somebody. The last line disables X11 forwarding.
 - hosts: all
   tasks:
   - name: "Configure ssh clients"
-    include_role:
+    ansible.builtin.include_role:
       name: linux-system-roles.ssh
     vars:
       ssh_user: root

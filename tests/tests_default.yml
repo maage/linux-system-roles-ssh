@@ -7,7 +7,7 @@
 
   tasks:
     - name: Backup configuration files
-      include_tasks: tasks/backup.yml
+      ansible.builtin.include_tasks: tasks/backup.yml
 
 - name: Ensure that the role runs with default parameters
   hosts: all
@@ -23,4 +23,4 @@
 
   tasks:
     - name: Restore configuration files
-      include_tasks: tasks/restore.yml
+      ansible.builtin.include_tasks: tasks/restore.yml

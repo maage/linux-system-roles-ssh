@@ -3,7 +3,7 @@
   hosts: all
   tasks:
     - name: Run role
-      include_role:
+      ansible.builtin.include_role:
         name: linux-system-roles.ssh
       vars:
         ssh:
@@ -15,12 +15,12 @@
     - name: Verify the configuration file was created in the right place
       block:
         - name: Download the custom configuration file
-          slurp:
+          ansible.builtin.slurp:
             src: /tmp/ssh_config
           register: config
 
         - name: Verify the options are in the file
-          assert:
+          ansible.builtin.assert:
             that:
               - "'Compression yes' in config.content | b64decode"
               - "'GSSAPIAuthentication no' in config.content | b64decode"

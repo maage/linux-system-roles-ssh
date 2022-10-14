@@ -9,19 +9,19 @@
     username: tester123
   tasks:
     - name: Backup configuration files
-      include_tasks: tasks/backup.yml
+      ansible.builtin.include_tasks: tasks/backup.yml
 
     - name: Create a test group (with the same name as user)
       group:
         name: "{{ username }}"
 
     - name: Create a test user
-      user:
+      ansible.builtin.user:
         name: "{{ username }}"
         group: "{{ username }}"
 
     - name: Run role
-      include_role:
+      ansible.builtin.include_role:
         name: linux-system-roles.ssh
       vars:
         ssh_user: "{{ username }}"
@@ -33,7 +33,7 @@
             User: somebody
 
     - name: Gather information about the user
-      getent:
+      ansible.builtin.getent:
         database: passwd
         key: "{{ username }}"
 
@@ -44,7 +44,7 @@
 
       block:
         - name: Download the created configuration file
-          slurp:
+          ansible.builtin.slurp:
             src: "{{ ssh_test_config_file }}"
           register: config
 
@@ -52,13 +52,13 @@
           become: true
           become_user: "{{ username }}"
           become_method: su
-          stat:
+          ansible.builtin.stat:
             path: "/home/{{ username }}/.ssh"
           register:
             ssh_dir_mode
 
         - name: Verify the ~/.ssh has sensible permissions
-          assert:
+          ansible.builtin.assert:
             that:
               - ssh_dir_mode.stat.exists
               - "ssh_dir_mode.stat.pw_name == '{{ username }}'"
@@ -69,17 +69,17 @@
           become: true
           become_user: "{{ username }}"
           become_method: su
-          stat:
+          ansible.builtin.stat:
             path: "/home/{{ username }}/.ssh/config"
 
         - name: Stat the configuration file
-          stat:
+          ansible.builtin.stat:
             path: "{{ ssh_test_config_file }}"
           register:
             config_mode
 
         - name: Verify the options are in the file
-          assert:
+          ansible.builtin.assert:
             that:
               - "'\nGSSAPIAuthentication no' in config.content | b64decode"
               - "'Host example' in config.content | b64decode"
@@ -90,7 +90,7 @@
               - "'SendEnv' not in config.content | b64decode"
 
         - name: Verify the file has sensible permissions
-          assert:
+          ansible.builtin.assert:
             that:
               - config_mode.stat.exists
               - "config_mode.stat.pw_name == '{{ username }}'"
@@ -101,14 +101,14 @@
           become: true
           become_user: "{{ username }}"
           become_method: su
-          command: ssh -vvv -G example
+          ansible.builtin.command: ssh -vvv -G example
           register: effective
           when:
             - ansible_facts['distribution'] not in ['CentOS', 'RedHat'] or
               ansible_facts['distribution_version'] | int > 6
 
         - name: Make sure the effective configuration is expected
-          assert:
+          ansible.builtin.assert:
             that:
               - "'hostname example.com' in effective.stdout"
               - "'user somebody' in effective.stdout"
@@ -117,12 +117,12 @@
               ansible_facts['distribution_version'] | int > 6
 
         - name: Download the global configuration files too
-          slurp:
+          ansible.builtin.slurp:
             src: /etc/ssh/ssh_config
           register: global_config
 
         - name: Verify the options are NOT in the global configuration file
-          assert:
+          ansible.builtin.assert:
             that:
               - "'\nGSSAPIAuthentication no' not in content"
               - "'Host example' not in content"
@@ -132,4 +132,4 @@
             content: "{{ global_config.content | b64decode }}"
 
     - name: Restore configuration files
-      include_tasks: tasks/restore.yml
+      ansible.builtin.include_tasks: tasks/restore.yml

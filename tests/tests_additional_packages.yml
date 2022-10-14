@@ -14,16 +14,16 @@
       {% endif %}
   tasks:
     - name: Run role
-      include_role:
+      ansible.builtin.include_role:
         name: linux-system-roles.ssh
       vars:
         ssh_additional_packages:
           - "{{ additional_package | trim }}"
 
     - name: Gather the package facts
-      package_facts:
+      ansible.builtin.package_facts:
 
     - name: Verify the packages were installed
-      assert:
+      ansible.builtin.assert:
         that:
           - "'{{ additional_package | trim }}' in ansible_facts.packages"

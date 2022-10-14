@@ -15,10 +15,10 @@
                ansible_facts['distribution_version'] | int >= 8)
 
     - name: Backup configuration files
-      include_tasks: tasks/backup.yml
+      ansible.builtin.include_tasks: tasks/backup.yml
 
     - name: Run role
-      include_role:
+      ansible.builtin.include_role:
         name: linux-system-roles.ssh
       vars:
         ssh:
@@ -29,12 +29,12 @@
     - name: Verify the configuration file was created in the right place
       block:
         - name: Download the custom configuration file drop-in
-          slurp:
+          ansible.builtin.slurp:
             src: /tmp/ssh_config.d_00-ansible.conf
           register: config
 
         - name: Verify the options are in the file
-          assert:
+          ansible.builtin.assert:
             that:
               - "'Compression yes' in config.content | b64decode"
               - "'GSSAPIAuthentication no' in config.content | b64decode"
@@ -43,4 +43,4 @@
               - "'SendEnv' not in config.content | b64decode"
 
     - name: Restore configuration files
-      include_tasks: tasks/restore.yml
+      ansible.builtin.include_tasks: tasks/restore.yml

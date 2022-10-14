@@ -9,7 +9,7 @@
 
   tasks:
     - name: Backup configuration files
-      include_tasks: tasks/backup.yml
+      ansible.builtin.include_tasks: tasks/backup.yml
 
 - name: Run role
   hosts: all
@@ -38,18 +38,18 @@
         ssh_test_config_file: /etc/ssh/ssh_config.d/99-last.conf
       block:
         - name: Download the included configuration file
-          slurp:
+          ansible.builtin.slurp:
             src: "{{ ssh_test_config_file }}"
           register: config
 
         - name: Stat the configuration file too
-          stat:
+          ansible.builtin.stat:
             path: "{{ ssh_test_config_file }}"
           register:
             config_mode
 
         - name: Verify the options are in the file
-          assert:
+          ansible.builtin.assert:
             that:
               - "'\nGSSAPIAuthentication no' in config.content | b64decode"
               - "'Host example' in config.content | b64decode"
@@ -60,12 +60,12 @@
               - "'SendEnv' not in config.content | b64decode"
 
         - name: Download the main configuration file too
-          slurp:
+          ansible.builtin.slurp:
             src: "/etc/ssh/ssh_config"
           register: global_config
 
         - name: Verify the options are NOT in the global configuration file
-          assert:
+          ansible.builtin.assert:
             that:
               - "'\nGSSAPIAuthentication no' not in content"
               - "'Host example' not in content"
@@ -74,7 +74,7 @@
             content: "{{ global_config.content | b64decode }}"
 
         - name: Verify the file has default sensible permissions
-          assert:
+          ansible.builtin.assert:
             that:
               - config_mode.stat.exists
               - config_mode.stat.gr_name == 'root'
@@ -88,4 +88,4 @@
       - /etc/ssh/ssh_config
   tasks:
     - name: Restore configuration files
-      include_tasks: tasks/restore.yml
+      ansible.builtin.include_tasks: tasks/restore.yml
