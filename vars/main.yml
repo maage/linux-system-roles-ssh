@@ -1,3 +1,4 @@
+---
 ########## Internal defaults ##########
 # default list of mandatory packages
 __ssh_packages: [ 'openssh', 'openssh-clients']
