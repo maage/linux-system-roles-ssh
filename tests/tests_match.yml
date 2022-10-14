@@ -90,6 +90,5 @@
         - ansible_facts['distribution'] not in ['CentOS', 'RedHat'] or
           ansible_facts['distribution_version'] | int > 6
 
-
     - name: Restore configuration files
       ansible.builtin.include_tasks: tasks/restore.yml
