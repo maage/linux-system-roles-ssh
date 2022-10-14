@@ -5,5 +5,5 @@ __ssh_defaults:
   Host:
     - Condition: "*"
       SendEnv: LANG LC_*
-      HashKnownHosts: yes
-      GSSAPIAuthentication: yes
+      HashKnownHosts: true
+      GSSAPIAuthentication: true
