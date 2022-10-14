@@ -1,0 +1,28 @@
+---
+# Based on ansible-lint config
+extends: default
+
+ignore: |
+  tests/roles/caller/vars/Amazon*.yml
+  tests/roles/caller/vars/CentOS*.yml
+  tests/roles/caller/vars/Debian*.yml
+  tests/roles/caller/vars/RedHat*.yml
+  tests/roles/caller/vars/Ubuntu*.yml
+
+rules:
+  braces:
+    forbid: non-empty
+    level: error
+  brackets:
+    forbid: non-empty
+    level: error
+  colons:
+    level: error
+  commas:
+    level: error
+  comments-indentation: disable
+  empty-lines:
+    level: error
+  hyphens:
+    level: error
+  line-length: disable
